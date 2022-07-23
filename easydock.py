@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
+from subprocess import Popen
+from settings import config
 import RPi.GPIO as gpio
 from time import sleep
 import easygui
 import sys
 import os
-
-sys.path.append("/var")
 
 """
 ########################################
@@ -75,6 +75,8 @@ def end():
 
 
 while True:
+    devnull = open(os.devnull, "wb")
+
     if gpio.input(33) == gpio.HIGH:
         qt = easygui.ynbox("Are you sure you want to quit EasyBoard?", "Confirm", ("Yes", "No"))
         if qt == True:
@@ -82,35 +84,36 @@ while True:
             
     # Button 1
     if gpio.input(11) == gpio.HIGH and buttons[0] == False:
-        os.system(config["binds"]["right-right"])
+        Popen(["nohup", config["binds"]["right-right"]], stdout=devnull, stderr=devnull)
         buttons[0] = True
-    else:
+    elif gpio.input(11) == gpio.LOW and buttons[4] == True:
         buttons[0] = False
         
     # Button 2  
     if gpio.input(13) == gpio.HIGH and buttons[1] == False:
-        os.system(config["binds"]["right-left"])
+        Popen(["nohup", config["binds"]["right-left"]], stdout=devnull, stderr=devnull)
         buttons[1] = True
-    else:
+    elif gpio.input(13) == gpio.LOW and buttons[4] == True:
         buttons[1] = False
         
     # Button 3    
     if gpio.input(15) == gpio.HIGH and buttons[2] == False:
-        os.system(config["binds"]["middle"])
+        Popen(["nohup", config["binds"]["middle"]], stdout=devnull, stderr=devnull)
         buttons[2] = True
-    else:
+    elif gpio.input(15) == gpio.LOW and buttons[4] == True:
         buttons[2] = False
         
     # Button 4 
     if gpio.input(29) == gpio.HIGH and buttons[3] == False:
-            os.system(config["binds"]["left-right"])
+            Popen(["nohup", config["binds"]["left-right"]], stdout=devnull, stderr=devnull)
             buttons[3] = True
-    else:
+    elif gpio.input(29) == gpio.LOW and buttons[4] == True:
         buttons[3] = False
         
     # Button 5
     if gpio.input(31) == gpio.HIGH and buttons[4] == False:
-        os.system(config["binds"]["left-left"])
+        print("left-left pressed")
+        Popen(["nohup", config["binds"]["left-left"]], stdout=devnull, stderr=devnull)
         buttons[4] = True
-    else:
+    elif gpio.input(31) == gpio.LOW and buttons[4] == True:
         buttons[4] = False
